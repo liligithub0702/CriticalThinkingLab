@@ -127,7 +127,7 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`Critical Thinker Pro on http://localhost:${PORT}${MOCK ? '  (mock coach responses)' : ''}`);
+  console.log(`Critical Thinking Lab on http://localhost:${PORT}${MOCK ? '  (mock coach responses)' : ''}`);
   if (!MOCK && !process.env.ANTHROPIC_API_KEY) {
     console.log('ANTHROPIC_API_KEY is not set - coach requests will fail. Use --mock for UI work.');
   }

@@ -1,4 +1,4 @@
-# Critical Thinker Pro
+# Critical Thinking Lab
 
 A guided, six-stage critical thinking coach for team managers. It walks one
 person through one real decision, one reasoning stage at a time, and challenges

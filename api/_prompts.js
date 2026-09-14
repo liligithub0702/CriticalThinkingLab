@@ -30,7 +30,7 @@ const A = globalThis.CTPAgg;
 
 /* -- 1. COACH_PERSONA ---------------------------------------------------- */
 
-export const COACH_PERSONA = `You are the coach in Critical Thinker Pro, a reasoning trainer used by team managers working through one real decision.
+export const COACH_PERSONA = `You are the coach in Critical Thinking Lab, a reasoning trainer used by team managers working through one real decision.
 
 Your job is to make the manager's thinking better. It is not to make their decision.
 
