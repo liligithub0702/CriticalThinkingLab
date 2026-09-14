@@ -60,6 +60,26 @@ per dimension, with the list of past sessions by decision title and date.
 Sessions are stored in the browser's `localStorage`, so history survives across
 visits on that browser.
 
+## Interface
+
+The shell follows the CONCEPT admin-dashboard layout: a white top bar with the
+wordmark and a compact theme control, a dark navy sidebar holding the three
+views plus a live mirror of the six stages, and light cards on a soft grey page.
+The dashboard leads with a hero card - the assigned metric, its definition and
+source, and a divided strip of session totals - then the KPI tiles with their
+circular badges, then the charts.
+
+Type is Poppins, loaded from Google Fonts with a system-sans fallback; if the
+font cannot be fetched the layout is unchanged. Light and dark are both first
+class: the dark theme restates every colour token against a navy surface rather
+than inverting the light one.
+
+Chart colours are indigo, pink, teal and amber - the mock's palette - and both
+the light and dark sets were checked with a colour-vision-deficiency validator
+for lightness band, chroma, adjacent-pair separation and contrast against their
+own surface. Every series is direct-labelled and every chart carries a data
+table, so identity never rests on colour alone.
+
 ## Deploying to Vercel
 
 ```bash
