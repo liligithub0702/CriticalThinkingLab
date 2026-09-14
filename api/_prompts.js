@@ -23,6 +23,11 @@
  * ===========================================================================
  */
 
+/* The browser and this file share one aggregation implementation, so the
+   figures the learner filters to are the figures the coach is given. */
+import '../public/aggregate.js';
+const A = globalThis.CTPAgg;
+
 /* -- 1. COACH_PERSONA ---------------------------------------------------- */
 
 export const COACH_PERSONA = `You are the coach in Critical Thinker Pro, a reasoning trainer used by team managers working through one real decision.
@@ -90,14 +95,16 @@ export const STAGES = [
   {
     id: 1,
     key: 'frame',
-    name: 'Frame',
+    name: 'Frame the problem statement',
     short: 'Frame',
-    question: 'What decision are you actually facing?',
-    help: 'State the decision in your own words: what you must decide, by when, who it affects, and what makes it hard. Or upload a document and let the app pull the decision out of it.',
-    placeholder: 'The decision I have to make is...',
-    brief: `Stage 1, Frame. The user states the decision they face.
+    question: 'Write the problem statement.',
+    help: 'This is the first move: put the problem into one written statement before you reason about it. Say what is happening and where you see it in the data, who it affects, what follows if nothing changes, the decision it forces and by when. Use the builder below if you want the shape, or upload a document and let the app pull the problem out of it.',
+    placeholder: 'Between weeks 1 and 4...\nThis shows up in...\nIf nothing changes...\nI must decide... by...',
+    brief: `Stage 1, Frame the problem statement. This is the first move of the whole activity: the user writes the problem statement that everything after it will be tested against.
 
-Test whether this is a decision or a complaint. A decision has an actor, at least two possible courses, a deadline or trigger, and a consequence. Push on a frame that is really a symptom ("CSAT is 0.79 against a 0.90 target"), a frame that smuggles in the answer ("how do I get Gamma's manager to accept a PIP"), or a frame so wide it cannot be decided on. If the framing has already picked a cause without checking, say so.`
+A usable problem statement has five parts: an observation that can be checked against the dashboard, where in the data it shows up, who is affected, the consequence of doing nothing, and the decision it forces with a deadline. Name which of the five are missing rather than listing all five back.
+
+Then test the statement itself. Reject a symptom dressed as a problem ("CSAT is 78.98% against a 90% target" is a reading, not a problem). Reject a statement that has already picked the cause or the answer ("Gamma's consultants are underperforming and need a plan") - that is a conclusion wearing a problem's clothes, and you should say which words smuggled it in. Reject a statement so wide it cannot be decided on. If a figure is quoted, check it against the dashboard and correct it if it is wrong.`
   },
   {
     id: 2,
@@ -167,94 +174,137 @@ export function stageById(id) {
 
 /* -- 5. dashboardBrief() ------------------------------------------------- */
 
-const pct = (v) => `${(v * 100).toFixed(1)}%`;
-const num = (v) => v.toLocaleString('en-GB');
+const pct = (v) => `${(v * 100).toFixed(2)}%`;
+const num = (v) => v.toLocaleString('en-GB', { maximumFractionDigits: 2 });
 
-export function dashboardBrief(d) {
-  const k = (id) => d.kpis.find((x) => x.id === id);
-  const defs = d.kpis
+function kpiVal(kpi, summary, weighted) {
+  const v = A.value(summary, kpi.id, weighted);
+  return kpi.format === 'min' ? `${v.toFixed(2)} min` : pct(v);
+}
+
+function line(kpis, s, weighted) {
+  return kpis.map((k) => `${k.name} ${kpiVal(k, s, weighted)}`).join(', ');
+}
+
+function groupBlock(kpis, rows, field, order, weighted) {
+  return A.groupBy(rows, field, order)
     .map(
-      (x) =>
-        `  ${x.name} (${x.full}, ${x.source}): ${x.format === 'min' ? `${x.value.toFixed(2)} min` : pct(x.value)} against a target of ${x.format === 'min' ? `${x.target} min` : pct(x.target)}. ${x.calculation}. ${x.notes}`
+      (g) =>
+        `    ${g.key}: ${line(kpis, g, weighted)}, ${num(g.surveys)} surveys, ${num(g.calls)} calls, ${g.agents} consultants, ${g.n} agent-weeks`
+    )
+    .join('\n');
+}
+
+function filterBlock(d, filters, rows, all, qaIgnored) {
+  if (!filters || !A.activeCount(filters)) {
+    return 'The learner has no filters applied - they are looking at all 240 agent-weeks.';
+  }
+  const picked = d.slicers
+    .filter((sl) => filters[sl.id] && filters[sl.id].length)
+    .map((sl) => `${sl.label}: ${filters[sl.id].join(', ')}`)
+    .join(' | ');
+  const ignored = qaIgnored.length
+    ? ` The QA audit sample has no ${qaIgnored.join(' and no ')} field, so that part of the filter does not narrow the audit figures.`
+    : '';
+  return `THE LEARNER HAS FILTERED THE DASHBOARD.
+Active slicers - ${picked}
+They are looking at ${rows.length} of ${all.length} agent-weeks. Everything in the "under the current filter" section below is that slice, not the whole month. If they state a figure as though it were the whole organisation when it is only their slice, say so.${ignored}`;
+}
+
+/**
+ * How the dashboard is described to the model. Computed from the same raw rows
+ * and the same aggregation module the browser uses, under the same filters, so
+ * the coach can check a claim against exactly what the learner is looking at.
+ */
+export function dashboardBrief(d, rows, qaRows, filters, weighted) {
+  const slice = A.filterRows(rows, filters);
+  const qaSlice = A.filterQa(qaRows, filters);
+  const qaIgnored = A.qaFiltersIgnored(filters);
+  const filtered = Boolean(filters && A.activeCount(filters));
+
+  const all = A.summarise(rows);
+  const s = A.summarise(slice);
+  const q = A.qaSummarise(qaSlice, d.qaPassMark);
+  const focus = d.kpis.find((k) => k.id === d.focus);
+  const K = d.kpis;
+
+  const defs = K.map(
+    (x) =>
+      `    ${x.name} (${x.full}, ${x.source}): target ${x.format === 'min' ? `${x.target} min` : pct(x.target)}. ${x.calculation}. ${x.notes}`
+  ).join('\n');
+
+  const monthTotals = `    Unweighted (the workbook's own figures): ${line(K, all, false)}
+    Weighted by ${K[0].weightedBy} / ${K[3].weightedBy}: CSAT ${pct(all.csatW)}, NPS ${pct(all.npsW)}, FCR ${pct(all.fcrW)}, QA ${pct(all.qaW)}, AHT ${all.ahtW.toFixed(2)} min
+    ${num(all.calls)} calls, ${num(all.surveys)} surveys returned, a ${pct(all.surveys / all.calls)} survey return rate, ${all.agents} consultants`;
+
+  const sliceBlock = filtered
+    ? `
+UNDER THE CURRENT FILTER (${slice.length} agent-weeks, ${s.agents} consultants)
+    ${line(K, s, weighted)}
+    ${num(s.surveys)} surveys, ${num(s.calls)} calls
+`
+    : '';
+
+  const types = A.groupBy(slice, 'type')
+    .sort((a, b) => b.surveys - a.surveys)
+    .map(
+      (g) =>
+        `    ${g.key}: ${line(K, g, weighted)}, ${num(g.surveys)} surveys (${pct(g.surveys / (s.surveys || 1))} of the slice)`
     )
     .join('\n');
 
-  const weeks = d.weeks
-    .map(
-      (w) =>
-        `  ${w.week}: CSAT ${pct(w.csat)}, NPS ${pct(w.nps)}, FCR ${pct(w.fcr)}, QA ${pct(w.qa)}, AHT ${w.aht.toFixed(2)} min, ${num(w.surveys)} surveys (${pct(w.surveyShare)} of the month), ${num(w.calls)} calls`
-    )
-    .join('\n');
+  const best = [...slice].sort((a, b) => b[d.focus] - a[d.focus]).slice(0, 3);
+  const worst = [...slice].sort((a, b) => a[d.focus] - b[d.focus]).slice(0, 3);
+  const one = (r) => `${r.name} (${r.team}, ${r.ten}, ${r.week}) ${focus.name} ${pct(r[d.focus])} on ${num(r.surveys)} surveys`;
 
-  const teams = d.teams
-    .map(
-      (t) =>
-        `  ${t.team} (manager ${t.manager}, ${t.agents} agents): CSAT ${pct(t.csat)}, NPS ${pct(t.nps)}, FCR ${pct(t.fcr)}, QA ${pct(t.qa)}, AHT ${t.aht.toFixed(2)} min, ${num(t.surveys)} surveys (${pct(t.surveyShare)} of the month), ${num(t.calls)} calls`
-    )
-    .join('\n');
-
-  const tenure = d.tenure
-    .map(
-      (t) =>
-        `  ${t.bucket} (${t.agents} agents): CSAT ${pct(t.csat)}, NPS ${pct(t.nps)}, FCR ${pct(t.fcr)}, QA ${pct(t.qa)}, AHT ${t.aht.toFixed(2)} min, ${num(t.surveys)} surveys, ${num(t.calls)} calls`
-    )
-    .join('\n');
-
-  const reasons = d.reasons
-    .map((r) => `  ${r.label}: CSAT ${pct(r.csat)}, AHT ${r.aht.toFixed(2)} min, ${pct(r.surveyShare)} of surveys`)
-    .join('\n');
-
-  const types = d.callTypes
-    .map((c) => `  ${c.label}: CSAT ${pct(c.csat)}, NPS ${pct(c.nps)}, FCR ${pct(c.fcr)}, AHT ${c.aht.toFixed(2)} min, ${pct(c.share)} of surveys`)
-    .join('\n');
-
-  const q = d.qaAudits;
-  const audits = `  ${num(q.audits)} audits, mean score ${q.meanScore}, ${q.passing} at or above the pass mark of ${q.passThreshold}.
-  Agent related ${q.agentRelated}, not agent related ${q.notAgentRelated}.
-  Level 1 drivers: ${q.drivers.map((x) => `${x.label} ${x.count}`).join(', ')}.
-  Most frequent root causes: ${q.topCauses.map((x) => `${x.label} ${x.count}`).join(', ')}.`;
-
-  const best = [...d.agents].sort((a, b) => b.csat - a.csat).slice(0, 3);
-  const worst = [...d.agents].sort((a, b) => a.csat - b.csat).slice(0, 3);
-  const agents = `  Highest CSAT: ${best.map((a) => `${a.name} (${a.team}, ${a.tenure}) ${pct(a.csat)} over ${num(a.calls)} calls`).join('; ')}.
-  Lowest CSAT: ${worst.map((a) => `${a.name} (${a.team}, ${a.tenure}) ${pct(a.csat)} over ${num(a.calls)} calls`).join('; ')}.`;
-
-  const caveats = d.caveats.map((c) => `  - ${c}`).join('\n');
-  const focus = k(d.focus);
+  const qaBlock = q.audits
+    ? `    ${num(q.audits)} audits, mean score ${q.meanScore.toFixed(2)}, range ${q.minScore} to ${q.maxScore}, ${q.passing} at or above the pass mark of ${q.passMark}.
+    Agent related ${q.agentRelated}, not agent related ${q.notAgentRelated}.
+    Level 1 drivers: ${q.drivers.map((x) => `${x.label} ${x.count}`).join(', ')}.
+    Most frequent level 2 causes: ${q.causes.map((x) => `${x.label} ${x.count}`).join(', ')}.
+    Score distribution: ${q.histogram.filter((h) => h.count).map((h) => `${h.label}: ${h.count}`).join(', ')}.
+    By team: ${q.byTeam.map((t) => `${t.key} mean ${t.meanScore.toFixed(1)} over ${t.audits} audits, ${t.passing} passing, ${t.agentRelated} agent related`).join('; ')}.`
+    : '    No audits match the current filter.';
 
   return `DASHBOARD THE USER IS LOOKING AT
 ${d.meta.title} - ${d.meta.org}. ${d.meta.scope}. ${d.meta.period}. Source: ${d.meta.source}.
-The metric under review this session is ${focus.name} (${focus.full}).
-${num(d.totals.calls)} calls handled, ${num(d.totals.surveys)} surveys returned, a ${pct(d.totals.surveyReturnRate)} survey return rate.
+The metric under review this session is ${focus.name} (${focus.full}), target ${focus.format === 'min' ? `${focus.target} min` : pct(focus.target)}.
+Averaging currently shown to the learner: ${weighted ? `weighted by ${focus.weightedBy}` : "unweighted mean of agent-week rates, the workbook's own convention"}.
 
-KPI definitions and month totals:
+${filterBlock(d, filters, slice, rows, qaIgnored)}
+
+KPI definitions:
 ${defs}
 
+WHOLE MONTH, ALL 240 AGENT-WEEKS:
+${monthTotals}
+${sliceBlock}
 By week:
-${weeks}
+${groupBlock(K, slice, 'week', ['Week 1', 'Week 2', 'Week 3', 'Week 4'], weighted)}
 
 By team:
-${teams}
+${groupBlock(K, slice, 'team', ['Alpha', 'Beta', 'Gamma', 'Delta'], weighted)}
 
 By agent tenure:
-${tenure}
+${groupBlock(K, slice, 'ten', ['0-6 months', '6-12 months', '12-48 months'], weighted)}
 
 By reason for the call:
-${reasons}
+${groupBlock(K, slice, 'reason', null, weighted)}
 
 By call type:
 ${types}
 
-QA audit sample:
-${audits}
+QA AUDITS in view:
+${qaBlock}
 
-Agent extremes:
-${agents}
+${focus.name} extremes among the agent-weeks in view:
+    Highest: ${best.map(one).join('; ')}.
+    Lowest: ${worst.map(one).join('; ')}.
 
 How this dashboard was built - facts, not conclusions:
-${caveats}
+${d.caveats.map((c) => `    - ${c}`).join('\n')}
 
-Read all of this as evidence, not as a conclusion. It contains real ambiguity: the survey-based KPIs all share one sample and most customers never answered, team and week figures are unweighted means of agent rates, tenure and AHT and team identity all move together, and the quality figures disagree with each other. Do not resolve that ambiguity for the user.`;
+Read all of this as evidence, not as a conclusion. It contains real ambiguity: the survey-based KPIs share one sample and most customers never answered, the default figures are unweighted means of agent rates, tenure and handling time and team identity all move together, and the two quality measures disagree with each other. Do not resolve that ambiguity for the user.`;
 }
 
 /* -- 6. buildCoachPrompt() ----------------------------------------------- */
@@ -273,7 +323,7 @@ function transcript(history) {
     .join('\n\n');
 }
 
-export function buildCoachPrompt({ stage, input, history, dashboard, opposingCase }) {
+export function buildCoachPrompt({ stage, input, history, dashboard, rows, qaRows, filters, weighted, opposingCase }) {
   const s = stageById(stage);
   return {
     system: `${COACH_PERSONA}
@@ -282,7 +332,7 @@ ${FLAWS_BRIEF}
 
 ${SCORING_RUBRIC}
 
-${dashboardBrief(dashboard)}`,
+${dashboardBrief(dashboard, rows, qaRows, filters, weighted)}`,
     user: `SESSION SO FAR
 ${transcript(history)}
 
@@ -302,11 +352,11 @@ Respond as the coach: three to five sentences of plain prose, ending in exactly 
 
 /* -- 7. buildOpposePrompt() ---------------------------------------------- */
 
-export function buildOpposePrompt({ history, dashboard }) {
+export function buildOpposePrompt({ history, dashboard, rows, qaRows, filters, weighted }) {
   return {
     system: `${COACH_PERSONA}
 
-${dashboardBrief(dashboard)}`,
+${dashboardBrief(dashboard, rows, qaRows, filters, weighted)}`,
     user: `SESSION SO FAR
 ${transcript(history)}
 
@@ -318,11 +368,11 @@ Rules: four to six sentences of plain prose. Argue the case directly - do not de
 
 /* -- 8. buildExtractPrompt() --------------------------------------------- */
 
-export function buildExtractPrompt({ dashboard }) {
+export function buildExtractPrompt({ dashboard, rows, qaRows, filters, weighted }) {
   return {
     system: `You extract the decision at stake from a working document - an email thread, an incident report, a performance note, a set of meeting notes - for a manager who is about to reason through it.
 
-${dashboardBrief(dashboard)}`,
+${dashboardBrief(dashboard, rows, qaRows, filters, weighted)}`,
     user: `The attached document belongs to a manager starting a critical thinking session. Read it and pull out the decision at stake.
 
 Return:
@@ -337,7 +387,7 @@ Take everything from the document. Do not import assumptions from the dashboard.
 
 /* -- 9. buildSummaryPrompt() --------------------------------------------- */
 
-export function buildSummaryPrompt({ history, dashboard, stageScores }) {
+export function buildSummaryPrompt({ history, dashboard, rows, qaRows, filters, weighted, stageScores }) {
   const scoreLines = stageScores
     .map((s) => {
       const st = stageById(s.stage);
@@ -352,7 +402,7 @@ ${FLAWS_BRIEF}
 
 ${SCORING_RUBRIC}
 
-${dashboardBrief(dashboard)}
+${dashboardBrief(dashboard, rows, qaRows, filters, weighted)}
 
 You are now writing the closing summary. The rule against supplying the user's answer still holds - you do not say what they should have decided - but this section is a report rather than a question, so it does not end in a question.`,
     user: `FULL SESSION

@@ -1,7 +1,7 @@
 /* Stage copy and the metric pack, so the page and the coach never drift apart. */
 
 import { STAGES } from './_prompts.js';
-import { DASHBOARD } from './_dashboard.js';
+import { DASHBOARD, ROWS, QA_ROWS } from './_dashboard.js';
 
 export default function handler(req, res) {
   if (req.method !== 'GET') {
@@ -18,6 +18,8 @@ export default function handler(req, res) {
       help,
       placeholder
     })),
-    dashboard: DASHBOARD
+    dashboard: DASHBOARD,
+    rows: ROWS,
+    qaRows: QA_ROWS
   });
 }

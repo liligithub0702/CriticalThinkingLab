@@ -7,7 +7,8 @@
  */
 
 import { askModel, CoachError } from './_model.js';
-import { DASHBOARD } from './_dashboard.js';
+import { DASHBOARD, ROWS, QA_ROWS } from './_dashboard.js';
+import '../public/aggregate.js';
 import {
   STAGES,
   stageById,
@@ -23,6 +24,7 @@ import {
 } from './_prompts.js';
 
 const MAX_INPUT = 12000;
+const SLICER_IDS = DASHBOARD.slicers.map((s) => s.id);
 const MAX_DOC = 400000; // characters of pasted/plain-text document
 const DIMENSIONS = ['clarity', 'evidence', 'assumptions', 'openness'];
 
@@ -57,6 +59,27 @@ export default async function handler(req, res) {
 
 /* -- actions ------------------------------------------------------------- */
 
+/*
+ * What the learner has sliced the dashboard to. Whitelisted against the
+ * declared slicers so the request cannot widen what the brief describes.
+ */
+function viewOf(body) {
+  const raw = body && typeof body.filters === 'object' && body.filters ? body.filters : {};
+  const filters = globalThis.CTPAgg.emptyFilters();
+  for (const id of SLICER_IDS) {
+    const picked = raw[id];
+    if (!Array.isArray(picked)) continue;
+    filters[id] = picked.filter((v) => typeof v === 'string').slice(0, 80).map((v) => v.slice(0, 120));
+  }
+  return {
+    dashboard: DASHBOARD,
+    rows: ROWS,
+    qaRows: QA_ROWS,
+    filters,
+    weighted: body.weighted === true
+  };
+}
+
 async function coach(body) {
   const stage = stageById(body.stage);
   if (!stage) throw new CoachError(400, 'Unknown stage.');
@@ -72,8 +95,8 @@ async function coach(body) {
     stage: stage.id,
     input,
     history,
-    dashboard: DASHBOARD,
-    opposingCase
+    opposingCase,
+    ...viewOf(body)
   });
 
   const out = await askModel({ system, user, schema: COACH_SCHEMA });
@@ -91,7 +114,7 @@ async function oppose(body) {
   const history = cleanHistory(body.history);
   if (!history.length) throw new CoachError(400, 'There is nothing to argue against yet.');
 
-  const { system, user } = buildOpposePrompt({ history, dashboard: DASHBOARD });
+  const { system, user } = buildOpposePrompt({ history, ...viewOf(body) });
   const out = await askModel({ system, user, schema: OPPOSE_SCHEMA });
   return { case: String(out.case || '').trim() };
 }
@@ -112,7 +135,7 @@ async function extract(body) {
     note = `\n\nDOCUMENT (${body.filename ? String(body.filename).slice(0, 200) : 'pasted text'})\n"""\n${text.slice(0, MAX_DOC)}\n"""`;
   }
 
-  const { system, user } = buildExtractPrompt({ dashboard: DASHBOARD });
+  const { system, user } = buildExtractPrompt({ ...viewOf(body) });
   const out = await askModel({
     system,
     user: user + note,
@@ -138,7 +161,7 @@ async function summary(body) {
     .filter((h) => h.scores)
     .map((h) => ({ stage: h.stage, ...h.scores }));
 
-  const { system, user } = buildSummaryPrompt({ history, dashboard: DASHBOARD, stageScores });
+  const { system, user } = buildSummaryPrompt({ history, stageScores, ...viewOf(body) });
   const out = await askModel({ system, user, schema: SUMMARY_SCHEMA });
 
   const averages = {};

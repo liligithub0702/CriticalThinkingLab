@@ -10,7 +10,7 @@ Every coach response is a real model call to Claude. Nothing is canned.
 
 | # | Stage | What the user does |
 |---|-------|--------------------|
-| 1 | Frame | States the decision in their own words, or uploads a document the app extracts the decision from |
+| 1 | Frame the problem statement | Writes the problem statement - the first move of the activity. A five-part builder composes a draft (what is happening, where it shows up, who it affects, what follows if nothing changes, the decision and its deadline), or a document can be uploaded and the problem pulled out of it |
 | 2 | Evidence | Lists what they know, separated into observed, inferred and assumed |
 | 3 | Assumptions & blind spots | Names what would have to be true for their view to hold |
 | 4 | Alternative perspectives | Answers the strongest case against their position, which the app argues first |
@@ -28,12 +28,42 @@ cause, anecdote treated as pattern. If an answer is off-topic or evasive the
 coach says so, re-asks, and the stage will not advance until it is rewritten.
 An empty stage never advances.
 
-## Scoring
+## Feedback and scoring
 
-Each stage is scored 1-5 on clarity of reasoning, quality of evidence,
-awareness of assumptions and openness to disagreement. Scores are hidden during
-the session and shown only on the final summary, as the mean of the six stage
-scores, with one line of justification per dimension.
+The coach's response is the point of each stage, so it is the loudest thing on
+the page: its own card, the named flaw, and the four dimension scores for that
+stage shown with it - clarity of reasoning, quality of evidence, awareness of
+assumptions, openness to disagreement, each 1-5. Revising and resubmitting
+rescores the stage. The final summary averages the six stages per dimension and
+adds a line of justification for each.
+
+## Filtering the data
+
+Nothing on the dashboard is pre-aggregated. The app holds the workbook's 240
+agent-week records and 1,079 QA audits and computes every figure live, so the
+learner can slice it the way the workbook's slicers do: **team, week, tenure and
+consultant**, plus the reason for the call. Every tile, chart and table follows
+the selection, and a banner states what the slice is - "60 of 240 agent-weeks"
+- so a figure read off a slice is never mistaken for the whole month.
+
+An **Averaging** control switches between the workbook's unweighted mean of
+agent-week rates and weighting by surveys or calls. The two disagree (78.98% vs
+79.35% overall for CSAT), which is deliberate: the control makes a methodology
+choice visible rather than burying it.
+
+The **QA reviews** section carries the audit sample in full - score
+distribution against the 90 pass mark, what the audits blame, audits by team,
+and every individual review with the root cause the auditor recorded,
+searchable and filterable to failures or agent-related causes only. The audit
+sample has no week and no call-reason field, so filtering by those leaves the
+audit figures unchanged and the app says so on screen instead of quietly
+returning the same numbers.
+
+The coach receives the learner's current slice and averaging mode with every
+request, computed through the same module the browser uses
+(`public/aggregate.js`), so it can check a claim against exactly what is on
+screen and can say when a figure from one slice is being stated as though it
+were the whole organisation.
 
 ## The dashboard
 
@@ -137,11 +167,12 @@ prompts is hard-coded to CSAT.
 ## Layout
 
 ```
-public/index.html     the entire interface - one self-contained page, no build step
+public/index.html     the entire interface - one page, no build step
+public/aggregate.js   shared aggregation, loaded by the browser and imported by the API
 api/config.js         GET  - stage copy and the metric pack
 api/coach.js          POST - coach, oppose, extract and summary actions
 api/_prompts.js       every model-facing prompt, in one marked place
-api/_dashboard.js     the metric pack extracted from the KPI workbook
+api/_dashboard.js     the metric pack: 240 agent-week rows, 1,079 QA audits, KPI definitions
 api/_model.js         the only place the Anthropic API is called
 scripts/dev.js        local server that runs api/ the way Vercel does
 ```

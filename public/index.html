@@ -414,6 +414,111 @@ tbody tr:hover td, tbody tr:hover th { background: var(--surface-2); }
 input[type="file"] { display: none; }
 .count { font-size: 0.8125rem; color: var(--muted); }
 
+
+/* ---- slicers ---- */
+.slicers {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius-lg); padding: 18px 20px; box-shadow: var(--shadow);
+}
+.slicer-head { display: flex; align-items: flex-start; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.slicer-head h3 { flex: 0 0 auto; }
+.slicer-head p { flex: 1 1 260px; }
+.slicer {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  padding: 9px 0; border-top: 1px solid var(--line);
+}
+.slicer-label {
+  flex: 0 0 132px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.04em;
+  text-transform: uppercase; color: var(--muted);
+}
+.chip {
+  appearance: none; cursor: pointer; font: inherit; font-size: 0.8125rem;
+  padding: 6px 13px; border-radius: 999px;
+  border: 1px solid var(--line-strong); background: var(--surface); color: var(--text-2);
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.chip:hover { border-color: var(--accent); color: var(--text); }
+.chip.on {
+  background: var(--accent); border-color: var(--accent); color: var(--on-accent); font-weight: 500;
+}
+.chip-x { font-size: 1rem; line-height: 1; opacity: 0.8; }
+
+/* ---- QA review browser ---- */
+.review-controls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 4px; }
+input[type="search"], input[type="text"] {
+  font: inherit; font-size: 0.875rem; color: var(--text); background: var(--surface);
+  border: 1px solid var(--line-strong); border-radius: var(--radius); padding: 9px 13px;
+}
+input[type="search"] { flex: 1 1 260px; min-width: 0; }
+input[type="search"]:focus, input[type="text"]:focus {
+  outline: 2px solid var(--focus); outline-offset: -1px; border-color: var(--focus);
+}
+.pass {
+  display: inline-block; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.04em;
+  padding: 2px 9px; border-radius: 999px;
+}
+.pass.yes { background: var(--teal-soft); color: var(--teal); }
+.pass.no { background: var(--pink-soft); color: var(--pink); }
+table.reviews { table-layout: fixed; }
+table.reviews th:first-child { width: 20%; }
+table.reviews .cell-type { width: 18%; white-space: normal; }
+table.reviews .cell-score { width: 12%; }
+table.reviews td.cause { width: 50%; }
+table.reviews th, table.reviews td {
+  vertical-align: top; text-align: left;
+  padding-top: 11px; padding-bottom: 11px;
+}
+table.reviews .cell-score { text-align: right; }
+table.reviews thead th:nth-child(3) { text-align: right; }
+.cell-main { display: block; }
+.cell-sub { display: block; font-size: 0.6875rem; color: var(--muted); margin-bottom: 2px; line-height: 1.4; }
+.cell-score .pass { margin-top: 4px; }
+td.cause { white-space: normal; color: var(--text-2); }
+td.cause .cell-main { color: var(--text); }
+.linkish {
+  appearance: none; border: 0; background: none; padding: 0; cursor: pointer;
+  font: inherit; color: var(--accent); text-align: left;
+}
+.linkish:hover { text-decoration: underline; }
+
+/* ---- problem statement builder ---- */
+.builder > summary { font-size: 0.875rem; font-weight: 500; }
+.builder-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-top: 14px; }
+.builder-field { display: flex; flex-direction: column; gap: 4px; }
+.builder-label { font-size: 0.8125rem; font-weight: 500; color: var(--text); }
+.builder-hint { font-size: 0.75rem; color: var(--muted); }
+.builder-field input { margin-top: 2px; }
+
+/* ---- coach feedback ---- */
+.feedback {
+  background: var(--surface); border: 1px solid var(--accent);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius-lg); padding: 22px 24px;
+  box-shadow: 0 2px 14px rgba(74, 91, 247, 0.12), var(--shadow);
+}
+.feedback.is-off { border-color: var(--warn); box-shadow: 0 2px 14px rgba(217, 140, 0, 0.14), var(--shadow); }
+.feedback-head { display: flex; align-items: center; gap: 13px; flex-wrap: wrap; margin-bottom: 14px; }
+.feedback-head h2 { font-size: 1.0625rem; }
+.feedback-badge {
+  flex: none; width: 38px; height: 38px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--accent-soft); color: var(--accent);
+}
+.feedback.is-off .feedback-badge { background: var(--amber-soft); color: var(--amber); }
+.feedback-body { font-size: 1rem; line-height: 1.75; }
+.feedback-scores { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line); }
+.meters { display: grid; grid-template-columns: repeat(auto-fit, minmax(158px, 1fr)); gap: 14px; }
+.meter-top { display: flex; align-items: baseline; gap: 8px; }
+.meter-name { font-size: 0.75rem; color: var(--text-2); }
+.meter-val { margin-left: auto; font-size: 0.9375rem; font-weight: 600; }
+.meter-track { height: 6px; border-radius: 3px; background: var(--surface-2); margin-top: 6px; overflow: hidden; }
+.meter-fill { height: 100%; border-radius: 3px; }
+
+@media (max-width: 640px) {
+  .slicer-label { flex-basis: 100%; }
+  .feedback { padding: 16px 17px; }
+}
+
 @media (max-width: 900px) {
   .icon-btn { display: inline-flex; }
   .topbar { padding: 0 16px; gap: 12px; }
@@ -481,7 +586,7 @@ input[type="file"] { display: none; }
     </div>
     <p class="nav-label">This session</p>
     <div class="nav-group" id="nav-stages"></div>
-    <p class="nav-note">Six stages, one decision. Scores are withheld until the summary.</p>
+    <p class="nav-note">Six stages, one decision. Each stage is scored as you go; the summary averages them.</p>
   </nav>
 
   <div class="content">
@@ -495,6 +600,9 @@ input[type="file"] { display: none; }
 <button class="scrim" id="scrim" tabindex="-1" aria-label="Close menu"></button>
 
 <input type="file" id="file-input" accept=".txt,.md,.markdown,.csv,.json,.log,.eml,.pdf,text/plain,application/pdf">
+
+<!-- The aggregation the coach also runs, so both sides see the same figures. -->
+<script src="/aggregate.js"></script>
 
 <script>
 "use strict";
@@ -600,6 +708,13 @@ const state = {
   view: "session",
   stages: [],
   dash: null,
+  rows: [],            // 240 agent-week records
+  qaRows: [],          // 1,079 QA audits
+  filters: null,       // the slicers, set once config arrives
+  weighted: false,     // false = the workbook's unweighted means
+  qaSearch: "",
+  qaOnlyFails: false,
+  qaOnlyAgent: false,
   index: 0,          // 0..5 stage index, 6 = summary screen
   entries: [],       // per stage: { input, coach, flaw, onTopic, scores, opposingCase }
   summary: null,
@@ -619,7 +734,14 @@ function stageDone(i) {
   return Boolean(e && e.coach && e.onTopic !== false);
 }
 function saveDraft() {
-  save(DRAFT_KEY, { index: state.index, entries: state.entries, summary: state.summary });
+  save(DRAFT_KEY, {
+    index: state.index,
+    entries: state.entries,
+    summary: state.summary,
+    filters: state.filters,
+    weighted: state.weighted,
+    breakdown: state.breakdown
+  });
 }
 
 /* ---------- api ---------- */
@@ -628,7 +750,10 @@ async function api(action, payload) {
   const res = await fetch("/api/coach", {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify(Object.assign({ action }, payload))
+    body: JSON.stringify(Object.assign(
+      { action, filters: state.filters, weighted: state.weighted },
+      payload
+    ))
   });
   let data = null;
   try { data = await res.json(); } catch { /* non-JSON error page */ }
@@ -909,9 +1034,13 @@ function chartBlock(title, note, draw, table) {
 "use strict";
 
 /* ===================================================================== *
- * The metric dashboard. Built once, then moved between the Dashboard
- * view and the expander inside the session so the learner can consult it
- * without losing their place.
+ * The metric dashboard. Every figure is computed from the raw agent-week
+ * and QA audit rows through CTPAgg (public/aggregate.js), under whatever
+ * slicers the learner has set - the same module and the same filters the
+ * coach is given, so the two can never disagree.
+ *
+ * Built once, then moved between the Dashboard view and the expander
+ * inside the session so the learner can consult it without losing place.
  * ===================================================================== */
 
 let dashNode = null;
@@ -925,20 +1054,111 @@ const TILE_LOOK = {
   aht: { bg: "var(--violet-soft)", fg: "var(--violet)", icon: "clock" }
 };
 
-function focusKpi() {
-  return state.dash.kpis.find((k) => k.id === state.dash.focus);
+function kpiById(id) { return state.dash.kpis.find((k) => k.id === id); }
+function focusKpi() { return kpiById(state.dash.focus); }
+function breakdownKpi() { return kpiById(state.breakdown); }
+
+/* The metric value off a summary, honouring the chosen averaging. */
+function mv(summary, id) { return CTPAgg.value(summary, id, state.weighted); }
+function fmtKpi(v, kpi) { return fmtVal(v, kpi.format); }
+
+function niceStepBounds(values, extra) { return niceBounds(values, extra); }
+
+/* ---------- slicers ---------- */
+
+function slicerBar() {
+  const d = state.dash;
+  const active = CTPAgg.activeCount(state.filters);
+  const bar = el("div", { class: "slicers" });
+
+  bar.appendChild(el("div", { class: "slicer-head" }, [
+    el("h3", { text: "Filter the data" }),
+    el("p", { class: "chart-note", style: { marginBottom: "0" }, text: "The workbook's slicers: team, week, tenure and consultant, plus the reason for the call. Every figure, chart and table below follows them." }),
+    el("span", { class: "spacer" }),
+    active
+      ? el("button", { class: "btn btn-quiet", text: `Clear ${active} filter${active === 1 ? "" : "s"}`, onclick: () => { state.filters = CTPAgg.emptyFilters(); rebuildDashboard(); } })
+      : null
+  ]));
+
+  d.slicers.forEach((sl) => {
+    const values = CTPAgg.distinct(state.rows, sl.field, sl.order);
+    const picked = state.filters[sl.id] || [];
+    const row = el("div", { class: "slicer" }, [
+      el("span", { class: "slicer-label", text: sl.label })
+    ]);
+
+    if (values.length > 12) {
+      /* 60 consultants is too many for chips - offer a picker plus the chosen. */
+      const pick = el("select", {
+        "aria-label": sl.label,
+        onchange: (e) => {
+          const v = e.target.value;
+          if (v && picked.indexOf(v) === -1) {
+            state.filters[sl.id] = picked.concat([v]);
+            rebuildDashboard();
+          }
+        }
+      }, [el("option", { value: "", text: `All ${values.length}` })].concat(
+        values.map((v) => el("option", { value: v, text: v }))
+      ));
+      row.appendChild(pick);
+      picked.forEach((v) => row.appendChild(chip(sl, v, true)));
+    } else {
+      values.forEach((v) => row.appendChild(chip(sl, v, false)));
+    }
+    bar.appendChild(row);
+  });
+
+  /* Averaging is a real analytical choice, so it sits with the filters. */
+  bar.appendChild(el("div", { class: "slicer" }, [
+    el("span", { class: "slicer-label", text: "Averaging" }),
+    el("button", {
+      class: "chip" + (state.weighted ? "" : " on"),
+      onclick: () => { state.weighted = false; rebuildDashboard(); },
+      text: "Unweighted (workbook)"
+    }),
+    el("button", {
+      class: "chip" + (state.weighted ? " on" : ""),
+      onclick: () => { state.weighted = true; rebuildDashboard(); },
+      text: "Weighted by volume"
+    })
+  ]));
+
+  return bar;
 }
-function breakdownKpi() {
-  return state.dash.kpis.find((k) => k.id === state.breakdown);
+
+function chip(slicer, value, removable) {
+  const picked = state.filters[slicer.id] || [];
+  const on = picked.indexOf(value) !== -1;
+  return el("button", {
+    class: "chip" + (on ? " on" : ""),
+    "aria-pressed": String(on),
+    onclick: () => {
+      state.filters[slicer.id] = on ? picked.filter((v) => v !== value) : picked.concat([value]);
+      rebuildDashboard();
+    },
+    title: on ? `Remove ${value}` : `Filter to ${value}`
+  }, [value, removable && on ? el("span", { class: "chip-x", text: "×" }) : null]);
 }
+
+/* ---------- the dashboard ---------- */
 
 function buildDashboard() {
   chartRegistries.dash.length = 0;
   chartTarget = "dash";
+
   const d = state.dash;
   const k = breakdownKpi();
   const fk = focusKpi();
-  const fmt = (v) => fmtVal(v, k.format);
+  const fmt = (v) => fmtKpi(v, k);
+
+  const rows = CTPAgg.filterRows(state.rows, state.filters);
+  const qaRows = CTPAgg.filterQa(state.qaRows, state.filters);
+  const all = CTPAgg.summarise(state.rows);
+  const s = CTPAgg.summarise(rows);
+  const q = CTPAgg.qaSummarise(qaRows, d.qaPassMark);
+  const filtered = CTPAgg.activeCount(state.filters) > 0;
+  const ignored = CTPAgg.qaFiltersIgnored(state.filters);
 
   dashNode = el("div", { class: "stack", id: "dashboard" });
 
@@ -960,23 +1180,46 @@ function buildDashboard() {
         el("div", { class: "chips" }, [
           el("span", { class: "tag", text: fk.full }),
           el("span", { class: "tag", text: fk.source }),
-          el("span", { class: "tag", text: `Target ${fmtVal(fk.target, fk.format)}` })
+          el("span", { class: "tag", text: `Target ${fmtKpi(fk.target, fk)}` })
         ])
       ])
     ]),
     el("div", { class: "hero-stats" }, [
-      ["Calls handled", n0(d.totals.calls)],
-      ["Surveys returned", n1(d.totals.surveys)],
-      ["Survey return rate", pct1(d.totals.surveyReturnRate)],
-      ["Consultants", String(d.totals.agents)],
-      ["Teams", String(d.totals.teams)],
-      ["QA audits", n0(d.qaAudits.audits)]
+      ["Calls handled", n0(s.calls)],
+      ["Surveys returned", n1(s.surveys)],
+      ["Survey return rate", pct1(s.calls ? s.surveys / s.calls : 0)],
+      ["Consultants", String(s.agents)],
+      ["Agent-weeks", `${s.n} of ${all.n}`],
+      ["QA audits", n0(q.audits)]
     ].map(([label, value]) => el("div", { class: "hero-stat" }, [
       el("b", { text: value }),
       el("span", { text: label })
     ])))
   ]));
 
+  /* slicers */
+  dashNode.appendChild(slicerBar());
+
+  if (filtered) {
+    dashNode.appendChild(el("p", { class: "banner banner-flag" }, [
+      `Filtered view: ${s.n} of ${all.n} agent-weeks, ${s.agents} of ${all.agents} consultants. `,
+      el("b", { text: `${fk.name} ${fmtKpi(mv(s, fk.id), fk)}` }),
+      ` in this slice against ${fmtKpi(mv(all, fk.id), fk)} for the whole month.`,
+      ignored.length
+        ? ` The QA audit sample carries no ${ignored.join(" and no ")} field, so the audit figures below are not narrowed by that part of the filter.`
+        : ""
+    ]));
+  }
+
+  if (!rows.length) {
+    dashNode.appendChild(el("div", { class: "card" }, [
+      el("p", { class: "lede", text: "No agent-weeks match that combination of filters. Clear one of them to see data again." })
+    ]));
+    chartTarget = "view";
+    return;
+  }
+
+  /* KPI tiles */
   dashNode.appendChild(el("div", { class: "dash-head" }, [
     el("h2", { text: "Key performance indicators" }),
     el("span", { class: "spacer" }),
@@ -989,13 +1232,13 @@ function buildDashboard() {
     ])
   ]));
 
-  /* KPI tiles */
   dashNode.appendChild(el("div", { class: "tiles" }, d.kpis.map((x) => {
-    const off = x.better === "lower" ? x.value - x.target : x.target - x.value;
+    const v = mv(s, x.id);
+    const off = x.better === "lower" ? v - x.target : x.target - v;
     const good = off <= 0;
     const gapTxt = x.format === "min"
-      ? `${Math.abs(x.value - x.target).toFixed(2)} min ${x.value > x.target ? "above" : "below"}`
-      : `${(Math.abs(x.value - x.target) * 100).toFixed(1)} pts ${x.value > x.target ? "above" : "below"}`;
+      ? `${Math.abs(v - x.target).toFixed(2)} min ${v > x.target ? "above" : "below"}`
+      : `${(Math.abs(v - x.target) * 100).toFixed(1)} pts ${v > x.target ? "above" : "below"}`;
     const look = TILE_LOOK[x.id] || TILE_LOOK.csat;
     return el("div", { class: "tile" + (x.id === d.focus ? " is-focus" : "") }, [
       el("div", { class: "tile-row" }, [
@@ -1003,46 +1246,46 @@ function buildDashboard() {
         el("div", { class: "tile-badge", style: { background: look.bg, color: look.fg } }, [icon(look.icon, 21)])
       ]),
       el("div", { class: "tile-val" }, [
-        x.format === "min" ? String(x.value.toFixed(2)) : pct1(x.value),
+        x.format === "min" ? String(v.toFixed(2)) : pct1(v),
         x.format === "min" ? el("span", { class: "tile-unit", text: "min" }) : null
       ]),
       el("div", { class: "tile-foot" }, [
         el("span", { class: good ? "delta-good" : "delta-bad", text: gapTxt }),
-        el("span", { text: ` \u00b7 target ${fmtVal(x.target, x.format)}` })
+        el("span", { text: ` · target ${fmtKpi(x.target, x)}` })
       ])
     ]);
   })));
 
   /* weekly rate KPIs */
+  const weeks = CTPAgg.groupBy(rows, "week", ["Week 1", "Week 2", "Week 3", "Week 4"]);
   const rateIds = ["csat", "nps", "fcr", "qa"];
   const rateSeries = rateIds.map((id, i) => ({
-    name: d.kpis.find((x) => x.id === id).name,
+    name: kpiById(id).name,
     color: `var(--s${i + 1})`,
-    values: d.weeks.map((w) => w[id])
+    values: weeks.map((w) => mv(w, id))
   }));
-  const rateVals = rateSeries.reduce((a, s) => a.concat(s.values), []);
-  const rateB = niceBounds(rateVals);
+  const rateB = niceBounds(rateSeries.reduce((a, x) => a.concat(x.values), []));
   const drawRates = (w, tip, box) => lineChart(w, tip, box, {
     title: "Survey KPIs by week",
-    categories: d.weeks.map((x) => x.week.replace("Week ", "Wk ")),
+    categories: weeks.map((x) => x.key.replace("Week ", "Wk ")),
     series: rateSeries, min: rateB.min, max: rateB.max, step: rateB.step,
     axisFmt: (v) => (v * 100).toFixed(0) + "%", tipFmt: pct1
   });
   drawRates.legendSeries = rateSeries;
   dashNode.appendChild(chartBlock(
     "Survey KPIs by week",
-    "CSAT, NPS and FCR come from the same survey. Targets differ per KPI and are shown on the tiles above, not here. The axis does not start at zero.",
+    `CSAT, NPS and FCR come from the same survey. Targets differ per KPI and are on the tiles above, not here. The axis does not start at zero. ${averagingNote()}`,
     drawRates,
-    dataTable(["Week", "CSAT", "NPS", "FCR", "QA"],
-      d.weeks.map((w) => [w.week, pct1(w.csat), pct1(w.nps), pct1(w.fcr), pct1(w.qa)]))
+    dataTable(["Week", "CSAT", "NPS", "FCR", "QA", "Surveys", "Calls", "Agent-weeks"],
+      weeks.map((w) => [w.key, pct1(mv(w, "csat")), pct1(mv(w, "nps")), pct1(mv(w, "fcr")), pct1(mv(w, "qa")), n1(w.surveys), n0(w.calls), w.n]))
   ));
 
   /* AHT by week */
-  const ahtVals = d.weeks.map((w) => w.aht);
+  const ahtVals = weeks.map((w) => mv(w, "aht"));
   const ahtB = niceBounds(ahtVals, 20);
   const drawAht = (w, tip, box) => lineChart(w, tip, box, {
     title: "Average handling time by week",
-    categories: d.weeks.map((x) => x.week.replace("Week ", "Wk ")),
+    categories: weeks.map((x) => x.key.replace("Week ", "Wk ")),
     series: [{ name: "AHT", color: "var(--s2)", values: ahtVals }],
     min: ahtB.min, max: ahtB.max, step: ahtB.step, target: 20, direct: false,
     axisFmt: (v) => v.toFixed(0), tipFmt: mins
@@ -1051,109 +1294,70 @@ function buildDashboard() {
     "Average handling time by week",
     "Minutes per call, including hold time and after-call work. The only KPI here that does not come from the survey.",
     drawAht,
-    dataTable(["Week", "AHT (min)", "Calls"], d.weeks.map((w) => [w.week, w.aht.toFixed(2), n0(w.calls)]))
+    dataTable(["Week", "AHT (min)", "Calls"], weeks.map((w) => [w.key, mv(w, "aht").toFixed(2), n0(w.calls)]))
   ));
 
   /* survey volume by week */
   const drawVol = (w, tip, box) => barChart(w, tip, box, {
     title: "Surveys returned by week",
-    items: d.weeks.map((x) => ({
-      label: x.week, value: x.surveys,
-      sub: `${pct1(x.surveyShare)} of the month · ${n0(x.calls)} calls handled`
+    items: weeks.map((x) => ({
+      label: x.key, value: x.surveys,
+      sub: `${pct1(x.surveys / (s.surveys || 1))} of the slice · ${n0(x.calls)} calls handled`
     })),
-    max: Math.max.apply(null, d.weeks.map((x) => x.surveys)) * 1.08,
+    max: Math.max.apply(null, weeks.map((x) => x.surveys)) * 1.08,
     fmt: (v) => n1(v), color: "var(--s3)", rowH: 30
   });
   dashNode.appendChild(chartBlock(
     "Surveys returned by week",
-    "How much of the month's survey sample each week contributes. Week 2 supplies 32.8% of it and week 3 supplies 21.0%.",
+    "How much of the survey sample each week contributes. A KPI's weekly movement is partly a change in who answered.",
     drawVol,
-    dataTable(["Week", "Surveys", "Share", "Calls"],
-      d.weeks.map((w) => [w.week, n1(w.surveys), pct1(w.surveyShare), n0(w.calls)]))
+    dataTable(["Week", "Surveys", "Share", "Calls", "Return rate"],
+      weeks.map((w) => [w.key, n1(w.surveys), pct1(w.surveys / (s.surveys || 1)), n0(w.calls), pct1(w.calls ? w.surveys / w.calls : 0)]))
   ));
 
-  /* breakdown: teams */
-  const teamMax = Math.max.apply(null, d.teams.map((t) => t[state.breakdown]).concat([k.target])) * 1.18;
-  const drawTeams = (w, tip, box) => barChart(w, tip, box, {
-    title: k.name + " by team",
-    items: d.teams.map((t) => ({
-      label: t.team,
-      value: t[state.breakdown],
-      sub: `${t.manager} · ${t.agents} agents · ${n1(t.surveys)} surveys (${pct1(t.surveyShare)}) · AHT ${mins(t.aht)}`
-    })),
-    max: teamMax, fmt, target: k.target, color: "var(--s1)", rowH: 30
-  });
-  dashNode.appendChild(chartBlock(
+  /* breakdowns */
+  dashNode.appendChild(breakdownChart(rows, "team", ["Alpha", "Beta", "Gamma", "Delta"], k,
     k.name + " by team",
-    "Each team is 15 consultants. The figure is the unweighted mean of its agents' weekly rates, so agents with very different survey counts carry equal weight.",
-    drawTeams,
-    dataTable(["Team", "Manager", "CSAT", "NPS", "FCR", "QA", "AHT", "Surveys", "Calls"],
-      d.teams.map((t) => [t.team, t.manager, pct1(t.csat), pct1(t.nps), pct1(t.fcr), pct1(t.qa), t.aht.toFixed(2), n1(t.surveys), n0(t.calls)]))
-  ));
+    "Each team is 15 consultants under one manager. " + averagingNote(), "var(--s1)"));
 
-  /* breakdown: tenure */
-  const tenMax = Math.max.apply(null, d.tenure.map((t) => t[state.breakdown]).concat([k.target])) * 1.18;
-  const drawTen = (w, tip, box) => barChart(w, tip, box, {
-    title: k.name + " by agent tenure",
-    items: d.tenure.map((t) => ({
-      label: t.bucket,
-      value: t[state.breakdown],
-      sub: `${t.agents} agents · ${n1(t.surveys)} surveys · ${n0(t.calls)} calls · AHT ${mins(t.aht)}`
-    })),
-    max: tenMax, fmt, target: k.target, color: "var(--s3)", rowH: 30
-  });
-  dashNode.appendChild(chartBlock(
+  dashNode.appendChild(breakdownChart(rows, "ten", ["0-6 months", "6-12 months", "12-48 months"], k,
     k.name + " by agent tenure",
-    "Tenure is not evenly spread across teams, and tenure, handling time and team identity all move together.",
-    drawTen,
-    dataTable(["Tenure", "Agents", "CSAT", "NPS", "FCR", "QA", "AHT", "Surveys", "Calls"],
-      d.tenure.map((t) => [t.bucket, t.agents, pct1(t.csat), pct1(t.nps), pct1(t.fcr), pct1(t.qa), t.aht.toFixed(2), n1(t.surveys), n0(t.calls)]))
-  ));
+    "Tenure is not evenly spread across teams, and tenure, handling time and team identity all move together.", "var(--s3)"));
 
-  /* breakdown: call type */
-  const types = d.callTypes.slice().sort((a, b) => b[state.breakdown] - a[state.breakdown]);
-  const typeMax = Math.max.apply(null, types.map((t) => t[state.breakdown]).concat([k.target])) * 1.18;
-  const drawTypes = (w, tip, box) => barChart(w, tip, box, {
-    title: k.name + " by call type",
-    items: types.map((t) => ({
-      label: t.label, value: t[state.breakdown],
-      sub: `${pct1(t.share)} of surveys · AHT ${mins(t.aht)} · FCR ${pct1(t.fcr)}`
-    })),
-    max: typeMax, fmt, target: k.target, color: "var(--s4)", rowH: 24
-  });
-  dashNode.appendChild(chartBlock(
+  dashNode.appendChild(breakdownChart(rows, "reason", null, k,
+    k.name + " by reason for the call",
+    "What the customer called about, grouped as the workbook groups it.", "var(--s2)"));
+
+  dashNode.appendChild(breakdownChart(rows, "type", null, k,
     k.name + " by call type",
-    "Sorted best to worst. Share of surveys varies from 14.8% down to 1.5%, so the bottom rows rest on far fewer responses.",
-    drawTypes,
-    dataTable(["Call type", "Share", "CSAT", "NPS", "FCR", "AHT"],
-      types.map((t) => [t.label, pct1(t.share), pct1(t.csat), pct1(t.nps), pct1(t.fcr), t.aht.toFixed(2)]))
-  ));
+    "Sorted best to worst. Share of surveys varies widely, so the bottom rows rest on far fewer responses.", "var(--s4)", 24));
 
-  /* QA audits */
-  const q = d.qaAudits;
-  const drawDrivers = (w, tip, box) => barChart(w, tip, box, {
-    title: "QA audit failure drivers",
-    items: q.drivers.map((x) => ({
-      label: x.label, value: x.count,
-      sub: `${((x.count / q.audits) * 100).toFixed(1)}% of ${n0(q.audits)} audits`
-    })),
-    max: Math.max.apply(null, q.drivers.map((x) => x.count)) * 1.08,
-    fmt: (v) => n0(v), color: "var(--s2)", rowH: 26
-  });
-  dashNode.appendChild(chartBlock(
-    "QA audit drivers",
-    `${n0(q.audits)} audits, mean score ${q.meanScore}, ${q.passing} at or above the pass mark of ${q.passThreshold}. ${q.agentRelated} were classed agent related and ${q.notAgentRelated} not agent related.`,
-    drawDrivers,
-    dataTable(["Root cause", "Audits"], q.topCauses.map((x) => [x.label, n0(x.count)]))
-  ));
+  /* QA reviews */
+  qaSection(dashNode, q, ignored);
 
-  /* agent table */
-  const agents = d.agents.slice().sort((a, b) => b[state.breakdown] - a[state.breakdown]);
+  /* consultants */
+  const byAgent = CTPAgg.groupBy(rows, "name").sort((a, b) => mv(b, state.breakdown) - mv(a, state.breakdown));
   dashNode.appendChild(el("div", { class: "chart-block" }, [
-    el("h3", { text: "Every consultant" }),
-    el("p", { class: "chart-note", text: `All ${d.agents.length} consultants, month to date, sorted by ${k.name}.` }),
-    dataTable(["Consultant", "Team", "Tenure", "CSAT", "NPS", "FCR", "QA", "AHT", "Calls"],
-      agents.map((a) => [a.name, a.team, a.tenure, pct1(a.csat), pct1(a.nps), pct1(a.fcr), pct1(a.qa), a.aht.toFixed(2), n0(a.calls)]))
+    el("h3", { text: "Every consultant in view" }),
+    el("p", { class: "chart-note", text: `${byAgent.length} consultants, sorted by ${k.name}. Click a name to filter the whole dashboard to that person.` }),
+    el("div", { class: "table-wrap" }, [
+      el("table", null, [
+        el("thead", null, [el("tr", null, ["Consultant", "Team", "Tenure", "CSAT", "NPS", "FCR", "QA", "AHT", "Surveys", "Calls", "Agent-weeks"].map((h) => el("th", { text: h, scope: "col" })))]),
+        el("tbody", null, byAgent.map((a) => {
+          const row = rows.find((r) => r.name === a.key);
+          return el("tr", null, [
+            el("th", { scope: "row", style: { fontWeight: "400" } }, [
+              el("button", { class: "linkish", text: a.key, onclick: () => { state.filters.name = [a.key]; rebuildDashboard(); } })
+            ]),
+            el("td", { text: row.team }), el("td", { text: row.ten }),
+            el("td", { text: pct1(mv(a, "csat")) }), el("td", { text: pct1(mv(a, "nps")) }),
+            el("td", { text: pct1(mv(a, "fcr")) }), el("td", { text: pct1(mv(a, "qa")) }),
+            el("td", { text: mv(a, "aht").toFixed(2) }), el("td", { text: n1(a.surveys) }),
+            el("td", { text: n0(a.calls) }), el("td", { text: String(a.n) })
+          ]);
+        }))
+      ])
+    ])
   ]));
 
   /* definitions */
@@ -1161,7 +1365,7 @@ function buildDashboard() {
     el("h3", { text: "How each KPI is defined" }),
     el("p", { class: "chart-note", text: "Taken from the workbook's own KPI sheet." }),
     dataTable(["KPI", "Source", "Question", "Calculation", "Target", "Notes"],
-      d.kpis.map((x) => [x.name, x.source, x.question, x.calculation, fmtVal(x.target, x.format), x.notes]))
+      d.kpis.map((x) => [x.name, x.source, x.question, x.calculation, fmtKpi(x.target, x), x.notes]))
   ]));
 
   /* caveats */
@@ -1174,11 +1378,208 @@ function buildDashboard() {
   chartTarget = "view";
 }
 
+function averagingNote() {
+  const fk = focusKpi();
+  return state.weighted
+    ? `Figures are weighted by ${fk.weightedBy}.`
+    : "Figures are the unweighted mean of agent-week rates, as the workbook computes them.";
+}
+
+function breakdownChart(rows, field, order, kpi, title, note, color, rowH) {
+  const groups = CTPAgg.groupBy(rows, field, order);
+  if (!order) groups.sort((a, b) => mv(b, kpi.id) - mv(a, kpi.id));
+  const fmt = (v) => fmtKpi(v, kpi);
+  const max = Math.max.apply(null, groups.map((g) => mv(g, kpi.id)).concat([kpi.target])) * 1.18;
+  const draw = (w, tip, box) => barChart(w, tip, box, {
+    title,
+    items: groups.map((g) => ({
+      label: g.key,
+      value: mv(g, kpi.id),
+      sub: `${g.agents} consultant${g.agents === 1 ? "" : "s"} · ${n1(g.surveys)} surveys · ${n0(g.calls)} calls · AHT ${mins(mv(g, "aht"))}`
+    })),
+    max, fmt, target: kpi.target, color, rowH: rowH || 30
+  });
+  return chartBlock(title, note, draw,
+    dataTable([kpi.name + " by", "CSAT", "NPS", "FCR", "QA", "AHT", "Surveys", "Calls", "Consultants"],
+      groups.map((g) => [g.key, pct1(mv(g, "csat")), pct1(mv(g, "nps")), pct1(mv(g, "fcr")), pct1(mv(g, "qa")), mv(g, "aht").toFixed(2), n1(g.surveys), n0(g.calls), g.agents])));
+}
+
+/* ---------- QA reviews ---------- */
+
+function qaSection(host, q, ignored) {
+  host.appendChild(el("div", { class: "dash-head", style: { marginTop: "8px" } }, [
+    el("h2", { text: "QA reviews" }),
+    el("span", { class: "spacer" }),
+    el("span", { class: "tag", text: `${n0(q.audits)} audits in view` })
+  ]));
+
+  if (!q.audits) {
+    host.appendChild(el("div", { class: "card" }, [
+      el("p", { class: "lede", text: "No QA audits match the current filter." })
+    ]));
+    return;
+  }
+
+  host.appendChild(el("div", { class: "tiles" }, [
+    ["Audits", n0(q.audits), `${q.minScore} to ${q.maxScore} score range`, "shield", "var(--amber-soft)", "var(--amber)"],
+    ["Mean audit score", q.meanScore.toFixed(2), `Pass mark ${q.passMark}`, "check", "var(--teal-soft)", "var(--teal)"],
+    ["Reaching the pass mark", n0(q.passing), `${pct1(q.passing / q.audits)} of audits`, "smile", "var(--accent-soft)", "var(--accent)"],
+    ["Agent related", n0(q.agentRelated), `${pct1(q.agentRelated / q.audits)} · ${n0(q.notAgentRelated)} not agent related`, "message", "var(--pink-soft)", "var(--pink)"]
+  ].map(([name, value, foot, glyph, bg, fg]) => el("div", { class: "tile" }, [
+    el("div", { class: "tile-row" }, [
+      el("div", { class: "tile-name", text: name }),
+      el("div", { class: "tile-badge", style: { background: bg, color: fg } }, [icon(glyph, 21)])
+    ]),
+    el("div", { class: "tile-val", text: value }),
+    el("div", { class: "tile-foot", text: foot })
+  ]))));
+
+  if (ignored.length) {
+    host.appendChild(el("p", { class: "banner banner-flag", text: `The audit sample carries no ${ignored.join(" and no ")} field. Filtering by ${ignored.join(" or ")} leaves these audit figures unchanged - only team, tenure and consultant narrow them.` }));
+  }
+
+  /* score distribution */
+  const hist = q.histogram;
+  const drawHist = (w, tip, box) => barChart(w, tip, box, {
+    title: "Audit score distribution",
+    items: hist.map((h) => ({
+      label: h.label,
+      value: h.count,
+      color: h.passing ? "var(--s3)" : "var(--s4)",
+      sub: `${pct1(h.count / q.audits)} of audits · ${h.passing ? "at or above" : "below"} the pass mark of ${q.passMark}`
+    })),
+    max: Math.max.apply(null, hist.map((h) => h.count)) * 1.08,
+    fmt: (v) => n0(v), rowH: 22
+  });
+  host.appendChild(chartBlock(
+    "Audit score distribution",
+    `Every audit, in five-point buckets. An individual review passes at ${q.passMark}, which is why the CRM QA score and this sample tell different stories.`,
+    drawHist,
+    dataTable(["Score band", "Audits", "Share", "Passing band"],
+      hist.map((h) => [h.label, n0(h.count), pct1(h.count / q.audits), h.passing ? "yes" : "no"]))
+  ));
+
+  /* drivers */
+  const drawDrivers = (w, tip, box) => barChart(w, tip, box, {
+    title: "Level 1 failure drivers",
+    items: q.drivers.map((x) => ({
+      label: x.label, value: x.count,
+      sub: `${pct1(x.count / q.audits)} of ${n0(q.audits)} audits`
+    })),
+    max: Math.max.apply(null, q.drivers.map((x) => x.count)) * 1.08,
+    fmt: (v) => n0(v), color: "var(--s2)", rowH: 26
+  });
+  host.appendChild(chartBlock(
+    "What the audits blame",
+    `${n0(q.agentRelated)} of ${n0(q.audits)} audits were classed agent related and ${n0(q.notAgentRelated)} were not. The level 1 driver is the auditor's own classification.`,
+    drawDrivers,
+    dataTable(["Level 2 cause", "Audits", "Share"],
+      q.causes.map((x) => [x.label, n0(x.count), pct1(x.count / q.audits)]))
+  ));
+
+  /* by team */
+  host.appendChild(el("div", { class: "chart-block" }, [
+    el("h3", { text: "Audits by team" }),
+    el("p", { class: "chart-note", text: "Audit counts are near-identical across teams, so the sample is not weighted towards the team with the lowest CSAT." }),
+    dataTable(["Team", "Audits", "Mean score", "Reaching pass mark", "Agent related"],
+      q.byTeam.map((t) => [t.key, n0(t.audits), t.meanScore.toFixed(2), `${t.passing} (${pct1(t.passing / t.audits)})`, `${t.agentRelated} (${pct1(t.agentRelated / t.audits)})`]))
+  ]));
+
+  /* the reviews themselves */
+  host.appendChild(reviewsTable());
+}
+
+function reviewsTable() {
+  const block = el("div", { class: "chart-block" });
+  block.appendChild(el("h3", { text: "The reviews themselves" }));
+  block.appendChild(el("p", { class: "chart-note", text: "Individual audits with the root cause the auditor recorded. This is the qualitative evidence behind the quality score - search it before you conclude anything from the average." }));
+
+  const controls = el("div", { class: "review-controls" });
+  const search = el("input", {
+    type: "search", placeholder: "Search name, call type, driver or root cause...",
+    "aria-label": "Search the QA reviews", value: state.qaSearch || ""
+  });
+  const onlyFails = el("button", {
+    class: "chip" + (state.qaOnlyFails ? " on" : ""),
+    "aria-pressed": String(Boolean(state.qaOnlyFails)),
+    text: "Below the pass mark only",
+    onclick: () => { state.qaOnlyFails = !state.qaOnlyFails; redraw(); }
+  });
+  const onlyAgent = el("button", {
+    class: "chip" + (state.qaOnlyAgent ? " on" : ""),
+    "aria-pressed": String(Boolean(state.qaOnlyAgent)),
+    text: "Agent related only",
+    onclick: () => { state.qaOnlyAgent = !state.qaOnlyAgent; redraw(); }
+  });
+  controls.append(search, onlyFails, onlyAgent);
+  block.appendChild(controls);
+
+  const count = el("p", { class: "chart-note", style: { margin: "10px 0 0" } });
+  const wrap = el("div", { class: "table-wrap" });
+  const more = el("div", { class: "btn-row", style: { marginTop: "12px" } });
+  block.append(count, wrap, more);
+
+  let shown = 25;
+
+  function matching() {
+    const term = (state.qaSearch || "").trim().toLowerCase();
+    return CTPAgg.filterQa(state.qaRows, state.filters).filter((r) => {
+      if (state.qaOnlyFails && r.pass) return false;
+      if (state.qaOnlyAgent && !r.agent) return false;
+      if (!term) return true;
+      return (r.name + " " + r.team + " " + r.type + " " + r.l1 + " " + r.l2 + " " + r.l3).toLowerCase().indexOf(term) !== -1;
+    });
+  }
+
+  function redraw() {
+    const list = matching();
+    onlyFails.className = "chip" + (state.qaOnlyFails ? " on" : "");
+    onlyAgent.className = "chip" + (state.qaOnlyAgent ? " on" : "");
+    count.textContent = list.length
+      ? `Showing ${Math.min(shown, list.length)} of ${n0(list.length)} audits.`
+      : "No audits match that search.";
+    wrap.innerHTML = "";
+    if (!list.length) { more.innerHTML = ""; return; }
+    /* Four columns, so the root cause - the evidence - is never pushed off. */
+    wrap.appendChild(el("table", { class: "reviews" }, [
+      el("thead", null, [el("tr", null, ["Consultant", "Call type", "Score", "Root cause recorded by the auditor"].map((h) => el("th", { text: h, scope: "col" })))]),
+      el("tbody", null, list.slice(0, shown).map((r) => el("tr", null, [
+        el("th", { scope: "row" }, [
+          el("span", { class: "cell-main", text: r.name }),
+          el("span", { class: "cell-sub", text: `${r.team} · ${r.ten}` })
+        ]),
+        el("td", { class: "cell-type", text: r.type }),
+        el("td", { class: "cell-score" }, [
+          el("span", { class: "cell-main", text: String(r.score) }),
+          el("span", { class: "pass " + (r.pass ? "yes" : "no"), text: r.pass ? "Pass" : "Fail" })
+        ]),
+        el("td", { class: "cause" }, [
+          el("span", { class: "cell-sub", text: `${r.l1} · ${r.l2} · ${r.agent ? "agent related" : "not agent related"}` }),
+          el("span", { class: "cell-main", text: r.l3 })
+        ])
+      ])))
+    ]));
+    more.innerHTML = "";
+    if (list.length > shown) {
+      more.appendChild(el("button", {
+        class: "btn", text: `Show 50 more (${n0(list.length - shown)} left)`,
+        onclick: () => { shown += 50; redraw(); }
+      }));
+    }
+  }
+
+  search.addEventListener("input", () => { state.qaSearch = search.value; shown = 25; redraw(); });
+  redraw();
+  return block;
+}
+
 function rebuildDashboard() {
   const host = dashNode.parentNode;
   const old = dashNode;
   buildDashboard();
   if (host) host.replaceChild(dashNode, old);
+  redrawAll();
+  saveDraft();
 }
 </script>
 
@@ -1229,7 +1630,10 @@ function stagePanel() {
   wrap.appendChild(el("h1", { text: s.question }));
   wrap.appendChild(el("p", { class: "lede", text: s.help }));
 
-  if (i === 0) wrap.appendChild(uploadRow());
+  if (i === 0) {
+    wrap.appendChild(problemBuilder());
+    wrap.appendChild(uploadRow());
+  }
 
   if (i === 3) {
     if (e.opposingCase) {
@@ -1287,18 +1691,128 @@ function stagePanel() {
   wrap.appendChild(row);
   updateCount();
 
-  if (e.coach) {
-    wrap.appendChild(el("div", { class: "card " + (e.onTopic === false ? "card-flag" : "card-accent"), "data-role": "coach" }, [
-      el("div", { class: "eyebrow", text: "Coach" }),
-      e.flaw ? el("p", { style: { marginBottom: "10px" } }, [el("span", { class: "tag tag-flaw", text: e.flaw })]) : null,
-      el("p", { class: "prose", text: e.coach }),
-      e.onTopic === false
-        ? el("p", { class: "hint", style: { marginTop: "12px" }, text: "Revise your answer and resubmit before moving on." })
-        : null
-    ]));
-  }
+  if (e.coach) wrap.appendChild(feedbackCard(e, i));
 
   return wrap;
+}
+
+/* ---------- the coach's feedback ---------- */
+
+/*
+ * The feedback is the point of the stage, so it is the loudest thing on the
+ * page: its own heading, the named flaw, and this stage's four scores with the
+ * reasoning still in front of the learner rather than held back to the summary.
+ */
+function feedbackCard(e, i) {
+  const off = e.onTopic === false;
+  const card = el("section", {
+    class: "feedback" + (off ? " is-off" : ""),
+    "data-role": "coach",
+    "aria-label": "Coach feedback on stage " + (i + 1)
+  });
+
+  card.appendChild(el("div", { class: "feedback-head" }, [
+    el("span", { class: "feedback-badge" }, [icon(off ? "message" : "smile", 18)]),
+    el("div", null, [
+      el("h2", { text: off ? "Not an answer yet" : "Coach feedback" }),
+      el("p", { class: "hint", text: off ? "This stage stays open until you rewrite it." : "On what you wrote for " + state.stages[i].name + "." })
+    ]),
+    el("span", { class: "spacer" }),
+    e.flaw ? el("span", { class: "tag tag-flaw", text: e.flaw }) : null
+  ]));
+
+  card.appendChild(el("p", { class: "prose feedback-body", text: e.coach }));
+
+  if (e.scores) {
+    card.appendChild(el("div", { class: "feedback-scores" }, [
+      el("div", { class: "eyebrow", text: "This stage, scored 1 to 5" }),
+      el("div", { class: "meters" }, DIMS.map((dim) => {
+        const v = e.scores[dim.id];
+        return el("div", { class: "meter" }, [
+          el("div", { class: "meter-top" }, [
+            el("span", { class: "meter-name", text: dim.label }),
+            el("span", { class: "meter-val", text: String(v) })
+          ]),
+          el("div", { class: "meter-track", role: "img", "aria-label": `${dim.label}: ${v} out of 5` }, [
+            el("div", { class: "meter-fill", style: { width: ((v - 1) / 4) * 100 + "%", background: dim.color } })
+          ])
+        ]);
+      })),
+      el("p", { class: "hint", style: { marginTop: "10px" }, text: "Resubmitting a revision rescores the stage. The summary averages the six." })
+    ]));
+  }
+  return card;
+}
+
+/* ---------- stage 1: the problem statement builder ---------- */
+
+/*
+ * Framing the problem statement is the first move of the activity, so stage 1
+ * offers the shape of one. The five fields only compose a draft - the textarea
+ * stays the answer, and the learner is expected to rewrite it in their words.
+ */
+const PS_PARTS = [
+  { id: "what", label: "What is happening", hint: "an observation, with a figure you can point to", ph: "CSAT fell from 79.96% in week 1 to 77.88% in week 4" },
+  { id: "where", label: "Where it shows up", hint: "which slice of the dashboard", ph: "concentrated in Gamma and in consultants under six months" },
+  { id: "who", label: "Who it affects", hint: "people, not departments", ph: "15 consultants, their manager, and the customers they handle" },
+  { id: "so", label: "What follows if nothing changes", hint: "the consequence you actually expect", ph: "we miss the 90% target for a second quarter and the gap widens" },
+  { id: "decide", label: "The decision it forces, and by when", hint: "an actual choice with a deadline", ph: "whether to act on Gamma or on the call mix, before the review on the 30th" }
+];
+
+function problemBuilder() {
+  state.ps = state.ps || {};
+  const box = el("details", { class: "card builder" });
+  if (state.psOpen) box.setAttribute("open", "");
+  box.addEventListener("toggle", () => { state.psOpen = box.open; });
+
+  box.appendChild(el("summary", { text: "Build a problem statement" }));
+  const body = el("div", { style: { marginTop: "14px" } });
+  box.appendChild(body);
+
+  body.appendChild(el("p", { class: "hint", text: "Five parts make a problem statement usable. Fill in whichever help, insert the draft, then rewrite it until it is yours. Skipping this and writing straight into the box below is fine." }));
+
+  const grid = el("div", { class: "builder-grid" });
+  PS_PARTS.forEach((part) => {
+    const input = el("input", {
+      type: "text", value: state.ps[part.id] || "", placeholder: part.ph,
+      "aria-label": part.label
+    });
+    input.addEventListener("input", () => { state.ps[part.id] = input.value; });
+    grid.appendChild(el("label", { class: "builder-field" }, [
+      el("span", { class: "builder-label", text: part.label }),
+      el("span", { class: "builder-hint", text: part.hint }),
+      input
+    ]));
+  });
+  body.appendChild(grid);
+
+  body.appendChild(el("div", { class: "btn-row", style: { marginTop: "14px" } }, [
+    el("button", {
+      class: "btn",
+      text: "Insert draft below",
+      onclick: () => {
+        const draft = composeProblem();
+        if (!draft) { state.error = "Fill in at least one part before inserting a draft."; render(); return; }
+        const e = entry(0);
+        e.input = e.input.trim() ? e.input.trim() + "\n\n" + draft : draft;
+        saveDraft();
+        render();
+      }
+    }),
+    el("span", { class: "hint", text: "It lands in the box below as plain text you can edit." })
+  ]));
+  return box;
+}
+
+function composeProblem() {
+  const v = (id) => (state.ps[id] || "").trim().replace(/[.\s]+$/, "");
+  const bits = [];
+  if (v("what")) bits.push(v("what") + ".");
+  if (v("where")) bits.push("It shows up " + v("where") + ".");
+  if (v("who")) bits.push("It affects " + v("who") + ".");
+  if (v("so")) bits.push("If nothing changes, " + v("so") + ".");
+  if (v("decide")) bits.push("I have to decide " + v("decide") + ".");
+  return bits.join(" ");
 }
 
 /* ---------- document upload (stage 1 only) ---------- */
@@ -1767,6 +2281,9 @@ async function boot() {
     const cfg = await res.json();
     state.stages = cfg.stages;
     state.dash = cfg.dashboard;
+    state.rows = cfg.rows;
+    state.qaRows = cfg.qaRows;
+    state.filters = CTPAgg.emptyFilters();
     state.breakdown = cfg.dashboard.focus;
   } catch (err) {
     state.error = err.message + " Check that the app is deployed with its API routes.";
@@ -1780,6 +2297,15 @@ async function boot() {
     state.summary = draft.summary || null;
     state.index = Math.min(6, Math.max(0, Number(draft.index) || 0));
     if (state.index >= 6 && !state.summary) state.index = 5;
+    if (draft.filters) {
+      const f = CTPAgg.emptyFilters();
+      Object.keys(f).forEach((k) => { if (Array.isArray(draft.filters[k])) f[k] = draft.filters[k]; });
+      state.filters = f;
+    }
+    state.weighted = draft.weighted === true;
+    if (draft.breakdown && state.dash.kpis.some((k) => k.id === draft.breakdown)) {
+      state.breakdown = draft.breakdown;
+    }
   }
 
   buildDashboard();
