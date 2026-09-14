@@ -1,0 +1,17 @@
+{
+  "name": "critical-thinker-pro",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A guided, multi-stage critical thinking coach for team managers.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.125.0"
+  },
+  "scripts": {
+    "dev": "node scripts/dev.js",
+    "mock": "node scripts/dev.js --mock"
+  }
+}
